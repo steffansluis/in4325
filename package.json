@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-ml-config": "node scripts/generate-ml-config.js > ./data/nordlys-ml-config.json",
-    "generate-training-data": "node scripts/features-to-training-set.js > ./data/training-data.json"
+    "build": "tsc && mkdir result",
+    "generate-ml-config": "node scripts/generate-ml-config.js > ./result/nordlys-ml-config.json",
+    "generate-training-data": "node scripts/features-to-training-set.js > ./result/training-data.json",
+    "generate-model": "(cd nordlys && python -m nordlys.core.ml.ml ../result/nordlys-ml-config.json)",
+    "generate-results": "yarn run build && yarn run generate-ml-config && yarn run generate-training-data && yarn run generate-model"
   },
   "repository": {
     "type": "git",

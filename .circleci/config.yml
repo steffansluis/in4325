@@ -1,0 +1,65 @@
+defaults: &defaults
+  working_directory: ~/in4325
+  docker:
+    - image: nikolaik/python-nodejs:latest
+      environment:
+        NODE_ENV: test
+    - image: elasticsearch:5-alpine
+      environment:
+        ES_JAVA_OPTS: -Xms512m -Xmx1024m
+    - image: mongo:latest
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - node_modules-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+          - nordlys
+
+      - run:
+          name: Install nordlys
+          command: bash .circleci/install-nordlys.sh
+
+      - run:
+          name: Install latest yarn
+          command: npm install --global yarn@latest
+
+      - run:
+          name: Install dependencies
+          command: yarn install
+
+      - run:
+          name: install dockerize
+          command: |
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+
+      - run:
+          name: Wait for ElasticSearch
+          command: dockerize -wait http://localhost:9200 -timeout 1m
+
+      - run:
+          name: Wait for Mongo
+          command: dockerize -wait http://localhost:27017 -timeout 1m
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: node_modules-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+      - save_cache:
+          paths:
+            - nordlys
+          key: nordlys
+
+      - run: yarn run generate-results
+
+      - store_artifacts:
+          path: result

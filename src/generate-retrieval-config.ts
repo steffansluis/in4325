@@ -1,9 +1,9 @@
 import * as path from 'path';
 
-const traingDataPath = path.join(__dirname, '../data/training-data.json');
-const modelPath = path.join(__dirname, '../data/model');
-const splitsPath = path.join(__dirname, '../data/splits');
-const outputPath = path.join(__dirname, '../data/output.tsv');
+const traingDataPath = path.join(__dirname, '../result/training-data.json');
+const modelPath = path.join(__dirname, '../result/model');
+const splitsPath = path.join(__dirname, '../result/splits');
+const outputPath = path.join(__dirname, '../result/output.tsv');
 
 export type Config = {
   model: "rf" | "gbrt",

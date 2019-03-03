@@ -1,0 +1,13 @@
+version: '2'
+services:
+  zookeeper:
+    image: elasticsearch:5-alpine
+    ports:
+      - "9192:9192"
+  mongo1:
+    image: mongo:3
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+
