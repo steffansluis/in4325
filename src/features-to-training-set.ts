@@ -170,7 +170,7 @@ export function extractFeatures(row: Row, features: Features): { [key: string]: 
 }
 
 // Async / await usage
-async function generateTrainingSet(featuresEnabled: Features = allFeatures): Promise<Array<MLInstance>> {
+async function generateTrainingSet(featuresEnabled: Features = allFeatures): Promise<{ [key: string]: MLInstance }> {
   const jsonArray: Array<Row> = await csv().fromFile(csvFilePath);
   const data = jsonArray.map(row => {
     const { query, query_id, table_id, rel } = row;
@@ -186,7 +186,12 @@ async function generateTrainingSet(featuresEnabled: Features = allFeatures): Pro
       target: rel,
       features
     };
-  });
+  }).reduce((memo, instance, index) => {
+    return {
+      ...memo,
+      [index]: instance
+    }
+  }, {});
 
   return data;
 }

@@ -91,7 +91,9 @@ async function generateTrainingSet(featuresEnabled = allFeatures) {
             target: rel,
             features
         };
-    });
+    }).reduce((memo, instance, index) => {
+        return Object.assign({}, memo, { [index]: instance });
+    }, {});
     return data;
 }
 async function doThings() {

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-training-set": "node scripts/features-to-training-set.js > ./data/training-data.json"
+    "generate-ml-config": "node scripts/generate-ml-config.js > ./data/nordlys-ml-config.json",
+    "generate-training-data": "node scripts/features-to-training-set.js > ./data/training-data.json"
   },
   "repository": {
     "type": "git",
