@@ -1,0 +1,26 @@
+{
+  "name": "in4325",
+  "version": "1.0.0",
+  "description": "## Instructions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-training-set": "node scripts/features-to-training-set.js > ./data/training-data.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steffansluis/in4325.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/steffansluis/in4325/issues"
+  },
+  "homepage": "https://github.com/steffansluis/in4325#readme",
+  "dependencies": {
+    "@types/csvtojson": "^1.1.5",
+    "@types/node": "^11.10.4",
+    "csvtojson": "^2.0.8",
+    "typescript": "^3.3.3333"
+  }
+}
