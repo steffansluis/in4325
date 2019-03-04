@@ -3,7 +3,7 @@ import * as path from 'path';
 const traingDataPath = path.join(__dirname, '../result/training-data.json');
 const modelPath = path.join(__dirname, '../result/model');
 const splitsPath = path.join(__dirname, '../result/splits');
-const outputPath = path.join(__dirname, '../result/output.tsv');
+const outputPath = path.join(__dirname, '../result/output.json');
 
 export type Config = {
   model: "rf" | "gbrt",

@@ -3,7 +3,8 @@ import * as path from 'path';
 const traingDataPath = path.join(__dirname, '../result/training-data.json');
 const modelPath = path.join(__dirname, '../result/model');
 const splitsPath = path.join(__dirname, '../result/splits');
-const outputPath = path.join(__dirname, '../result/output.tsv');
+const outputPath = path.join(__dirname, '../result/output.json');
+const featureImpPath = path.join(__dirname, '../result/features');
 
 export type Config = {
   model: "rf" | "gbrt",
@@ -40,6 +41,7 @@ const config: Config = {
   training_set: traingDataPath,
   model_file: modelPath,
   output_file: outputPath,
+  feature_imp_file: featureImpPath,
   cross_validation: {
     create_splits: true,
     splits_file: splitsPath,

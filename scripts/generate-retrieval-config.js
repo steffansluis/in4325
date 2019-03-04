@@ -11,7 +11,7 @@ const path = __importStar(require("path"));
 const traingDataPath = path.join(__dirname, '../result/training-data.json');
 const modelPath = path.join(__dirname, '../result/model');
 const splitsPath = path.join(__dirname, '../result/splits');
-const outputPath = path.join(__dirname, '../result/output.tsv');
+const outputPath = path.join(__dirname, '../result/output.json');
 const config = {
     model: "rf",
     category: "regression",
