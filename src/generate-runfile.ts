@@ -1,15 +1,12 @@
-import * as path from 'path';
 import * as fs from 'fs';
 
-import { MLInstance } from './generate-training-data';
+import * as Config from './config';
+import * as Types from './types';
 
-export type Result = MLInstance & {
-  score: number
-}
+const rawResults = fs.readFileSync(Config.outputPath).toString();
+const results: Types.Result[] = Object.values(JSON.parse(rawResults));
 
-const rawResults = fs.readFileSync(path.join(__dirname, '../result/output.json')).toString();
-const results: Result[] = Object.values(JSON.parse(rawResults));
-const rawQueries = fs.readFileSync(path.join(__dirname, '../data/queries.txt')).toString();
+const rawQueries = fs.readFileSync(Config.queriesPath).toString();
 const queries = rawQueries.split('\n').slice(0, -1).map(line => {
   const [ _, query_id, query ] = line.split(/^([0-9]*) /)
   return {

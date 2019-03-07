@@ -7,25 +7,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = __importStar(require("path"));
-const traingDataPath = path.join(__dirname, '../result/training-data.json');
-const modelPath = path.join(__dirname, '../result/model');
-const splitsPath = path.join(__dirname, '../result/splits');
-const outputPath = path.join(__dirname, '../result/output.json');
-const featureImpPath = path.join(__dirname, '../result/features');
+const Config = __importStar(require("./config"));
 const config = {
     model: "rf",
     category: "regression",
     parameters: {
         tree: 1000,
     },
-    training_set: traingDataPath,
-    model_file: modelPath,
-    output_file: outputPath,
-    feature_imp_file: featureImpPath,
+    training_set: Config.traingDataPath,
+    model_file: Config.modelPath,
+    output_file: Config.outputPath,
+    feature_imp_file: Config.featureImpPath,
     cross_validation: {
         create_splits: true,
-        splits_file: splitsPath,
+        splits_file: Config.splitsPath,
         k: 5,
     }
 };
