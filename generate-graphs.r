@@ -58,13 +58,15 @@ p4
 
 #import evals
 strEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".")
-ltrEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".")
+ltrEval <- read.delim("./result/eval_ltr.txt", header = FALSE, sep = "\t", dec = ".")
 
 ###
 # Preprocessing
 ###
 names(strEval) <- c("metric","query", "score")
 names(ltrEval) <- c("metric","query", "score")
+strEval$query <- sapply(strEval$query, as.numeric)
+ltrEval$query <- sapply(ltrEval$query, as.numeric)
 
 #split last row from eval
 strEvalAll <- strEval[nrow(strEval),]
@@ -72,10 +74,10 @@ strEval <- strEval[1:(nrow(strEval)-1),]
 ltrEvalAll <- ltrEval[nrow(ltrEval),]
 ltrEval <- ltrEval[1:(nrow(ltrEval)-1),]
 
-strSub1 <- subset(strEval, as.numeric(query) <= 30)
-strSub2 <- subset(strEval, as.numeric(query) > 30)
-ltrSub1 <- subset(ltrEval, as.numeric(query) <= 30)
-ltrSub2 <- subset(ltrEval, as.numeric(query) > 30)
+strSub1 <- subset(strEval, query <= 30)
+strSub2 <- subset(strEval, query > 30)
+ltrSub1 <- subset(ltrEval, query <= 30)
+ltrSub2 <- subset(ltrEval, query > 30)
 
 df6 <- data.frame("method" = c("LTR", "LTR", "STR", "STR"), 
                  "subset" = c("QS-1", "QS-2", "QS-1", "QS-2"),
@@ -86,3 +88,20 @@ p6<-ggplot(df6, aes(factor(subset), scores, fill = method)) +
   geom_bar(stat="identity", position = "dodge") + 
   scale_fill_brewer(palette = "Set2")
 p6
+
+####################
+#Recreate figure 7
+######################
+
+strSub1$diff <- strSub1$score - ltrSub1$score
+strSub2$diff <- strSub2$score - ltrSub2$score
+
+p7a<-ggplot(strSub1, aes(x = reorder(query, -diff), diff)) + 
+  geom_bar(stat="identity", position = "dodge") + 
+  scale_fill_brewer(palette = "Set2")
+p7a
+
+p7b<-ggplot(strSub2, aes(x = reorder(query, -diff), diff)) + 
+  geom_bar(stat="identity", position = "dodge") + 
+  scale_fill_brewer(palette = "Set2")
+p7b
