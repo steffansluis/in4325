@@ -50,29 +50,75 @@ p4
 #Recreate figure 5
 ######################
 
-
-
-######################
-#Recreate figure 6
-######################
-
 #import evals
-strEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".")
+bCatEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Categories
+bEntEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Entities
+wEmbEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the word embeddings
+gEmbEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the graph embedding
+strEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for combined representation
 ltrEval <- read.delim("./result/eval_ltr.txt", header = FALSE, sep = "\t", dec = ".")
 
 ###
 # Preprocessing
 ###
-names(strEval) <- c("metric","query", "score")
-names(ltrEval) <- c("metric","query", "score")
-strEval$query <- sapply(strEval$query, as.numeric)
-ltrEval$query <- sapply(ltrEval$query, as.numeric)
+#split last row (avg) from eval
+bCatEvalAll <- bCatEval[nrow(bCatEval),]
+bCatEval <- bCatEval[1:(nrow(bCatEval)-1),]
+bEntEvalAll <- bEntEval[nrow(bEntEval),]
+bEntEval <- bEntEval[1:(nrow(bEntEval)-1),]
+wEmbEvalAll <- wEmbEval[nrow(wEmbEval),]
+wEmbEval <- wEmbEval[1:(nrow(wEmbEval)-1),]
+gEmbEvalAll <- gEmbEval[nrow(gEmbEval),]
+gEmbEval <- gEmbEval[1:(nrow(gEmbEval)-1),]
 
-#split last row from eval
 strEvalAll <- strEval[nrow(strEval),]
 strEval <- strEval[1:(nrow(strEval)-1),]
 ltrEvalAll <- ltrEval[nrow(ltrEval),]
 ltrEval <- ltrEval[1:(nrow(ltrEval)-1),]
+
+names(bCatEval) <- c("metric","query", "score")
+names(bEntEval) <- c("metric","query", "score")
+names(wEmbEval) <- c("metric","query", "score")
+names(gEmbEval) <- c("metric","query", "score")
+names(strEval) <- c("metric","query", "score")
+names(ltrEval) <- c("metric","query", "score")
+bCatEval$query <- sapply(bCatEval$query, as.numeric)
+bEntEval$query <- sapply(bEntEval$query, as.numeric)
+wEmbEval$query <- sapply(wEmbEval$query, as.numeric)
+gEmbEval$query <- sapply(gEmbEval$query, as.numeric)
+strEval$query <- sapply(strEval$query, as.numeric)
+ltrEval$query <- sapply(ltrEval$query, as.numeric)
+
+#for each representation type
+
+strEval
+
+bCatEval
+ltrEval
+
+bCatEval$diff <- bCatEval$score - ltrEval$score
+bEntEval$diff <- bEntEval$score - ltrEval$score
+wEmbEval$diff <- wEmbEval$score - ltrEval$score
+gEmbEval$diff <- gEmbEval$score - ltrEval$score
+
+# create a histogram for each representation
+
+p5a <- ggplot(bCatEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5a
+
+p5b <- ggplot(bEntEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5b
+
+p5c <- ggplot(wEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5c
+
+p5d <- ggplot(gEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5d
+
+######################
+#Recreate figure 6
+######################
+
 
 strSub1 <- subset(strEval, query <= 30)
 strSub2 <- subset(strEval, query > 30)
