@@ -1,6 +1,7 @@
 #generate graphs
 library(ggplot2)
 
+# Create a standard features dataframe
 baselineFeatures <- c("row", "col", "nul", "in_link", "out_link", "pgcount", "tImp", "tPF", "leftColhits", "SecColhits", "bodyhits", 
                "PMI", "qInPgTitle", "qInTableTitle", "yRank", "csr_score", "idf1", "idf2", "idf3", "idf4", "idf5", "idf6")
 bEntFeatures <- c("max", "sum", "avg", "sim")
@@ -8,13 +9,8 @@ wEmbFeatures <- c("emax", "esum", "eavg", "esim")
 bCatFeatures <- c("cmax", "csum", "cavg", "csim")
 gEmbFeatures <- c("remax", "resum", "reavg", "resim")
 
-types <- c(rep("baseline", length(baselineFeatures)), rep("novel", length(c(bEntFeatures,wEmbFeatures,bCatFeatures,gEmbFeatures))) ) 
-
-types
-
-features <- data.frame("feature"=c(baselineFeatures,bEntFeatures,wEmbFeatures,bCatFeatures,gEmbFeatures), "type"=types, "importance" = rep(0, length(types)))
-
-features
+types <- c(rep("novel", length(c(bEntFeatures,wEmbFeatures,bCatFeatures,gEmbFeatures))), rep("baseline", length(baselineFeatures)) ) 
+features <- data.frame("feature"=c(bEntFeatures,wEmbFeatures,bCatFeatures,gEmbFeatures,baselineFeatures), "type"=types, "importance" = rep(0, length(types)))
 
 ##############
 # Import data
@@ -44,9 +40,10 @@ for(i in 1:nrow(rawFeatures)) {
   }
 }
 
-p4<-ggplot(features, aes(x = reorder(feature, -importance), importance, fill = reorder(type, -type))) + 
+features
+p4<-ggplot(features, aes(x = reorder(feature, -importance), importance, fill = type)) + 
   geom_bar(stat="identity", position = "dodge") + 
-  scale_fill_brewer(palette = "Set1")
+scale_fill_brewer(palette = "Set2") + theme(axis.text.x = element_text(angle = 90, hjust=1, vjust=0))
 p4
 
 ######################
@@ -87,5 +84,5 @@ df6 <- data.frame("method" = c("LTR", "LTR", "STR", "STR"),
 
 p6<-ggplot(df6, aes(factor(subset), scores, fill = method)) + 
   geom_bar(stat="identity", position = "dodge") + 
-  scale_fill_brewer(palette = "Set1")
+  scale_fill_brewer(palette = "Set2")
 p6
