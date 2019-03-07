@@ -16,7 +16,7 @@ export function extractFeatures(row: Types.Row, features: Types.Features): { [ke
 }
 
 // Async / await usage
-async function generateTrainingSet(featuresEnabled: Types.Features = Features.allFeatures): Promise<{ [key: string]: Types.MLInstance }> {
+export async function generateTrainingSet(featuresEnabled: Types.Features = Features.allFeatures): Promise<{ [key: string]: Types.MLInstance }> {
   const jsonArray: Array<Types.Row> = await csv().fromFile(Config.csvFilePath);
   const data = jsonArray.map(row => {
     const { query, query_id, table_id, rel } = row;
@@ -47,4 +47,4 @@ export async function doThings() {
   console.log(JSON.stringify(data));
 }
 
-doThings();
+// doThings();

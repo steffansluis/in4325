@@ -123,6 +123,8 @@ export const configurations: { [key:string]: Types.Features } = Object.keys(sema
     [name]: { ...lexicalFeatures, [feature]: true}
   }
 }, {
+  'lexicalFeatures': lexicalFeatures,
+
   'bagOfEntities_all': { ...lexicalFeatures, ...bagOfEntitiesFeatures },
   'bagOfCategories_all': { ...lexicalFeatures, ...bagOfCategoriesFeatures },
   'wordEmbeddings_all': { ...lexicalFeatures, ...wordEmbeddingsFeatures },
