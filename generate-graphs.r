@@ -42,12 +42,11 @@ for(i in 1:nrow(rawFeatures)) {
   }
 }
 
-png('./graphs/feature-importance.png')
 p4<-ggplot(features, aes(x = reorder(feature, -importance), importance, fill = type)) + 
   geom_bar(stat="identity", position = "dodge") + 
 scale_fill_brewer(palette = "Set2") + theme(axis.text.x = element_text(angle = 90, hjust=1, vjust=0))
 p4 # The feature importance for 1 run (5f cv) with all the features
-dev.off()
+ggsave("./graphs/feature-importance.png", width = 16, height = 9, dpi = 120)
 
 ######################
 #Recreate figure 5
@@ -100,25 +99,24 @@ gEmbEval$diff <- gEmbEval$score - ltrEval$score
 
 # create a histogram for each representation
 
-png('./graphs/diff-bag-of-categories.png')
-p5a <- ggplot(bCatEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+b <- 0.1
+
+p5a <- ggplot(bCatEval, aes(x=diff)) + geom_histogram(binwidth=b, color="orange", fill="orange") + xlim(-0.6,0.6) + ylim(0, 40)
 p5a # The difference between bag of categories and ltr
-dev.off()
+ggsave("./graphs/diff-bag-of-categories.png", width = 16, height = 16, dpi = 120)
 
-png('./graphs/diff-bag-of-entities.png')
-p5b <- ggplot(bEntEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+
+p5b <- ggplot(bEntEval, aes(x=diff)) + geom_histogram(binwidth=b, color="orange", fill="orange") + xlim(-0.6,0.6) + ylim(0, 40)
 p5b  # The difference between bag of entities and ltr
-dev.off()
+ggsave("./graphs/diff-bag-of-entities.png", width = 16, height = 16, dpi = 120)
 
-png('./graphs/diff-word-embeddings.png')
-p5c <- ggplot(wEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5c <- ggplot(wEmbEval, aes(x=diff)) + geom_histogram(binwidth=b, color="orange", fill="orange") + xlim(-0.6,0.6) + ylim(0, 40)
 p5c  # The difference between word embeddings and ltr
-dev.off()
+ggsave("./graphs/diff-word-embeddings.png", width = 16, height = 16, dpi = 120)
 
-png('./graphs/diff-graph-embeddings.png')
-p5d <- ggplot(gEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
+p5d <- ggplot(gEmbEval, aes(x=diff)) + geom_histogram(binwidth=b, color="orange", fill="orange") + xlim(-0.6,0.6) + ylim(0, 40)
 p5d  # The difference between graph embeddings and ltr
-dev.off()
+ggsave("./graphs/diff-graph-embeddings.png", width = 16, height = 16, dpi = 120)
 
 ######################
 #Recreate figure 6
@@ -135,12 +133,11 @@ df6 <- data.frame("method" = c("LTR", "LTR", "STR", "STR"),
 "scores" = c(mean(ltrSub1$score),mean(ltrSub2$score),mean(strSub1$score),mean(strSub2$score))
 )
 
-png('./graphs/subset-scores.png')
 p6<-ggplot(df6, aes(factor(subset), scores, fill = method)) + 
   geom_bar(stat="identity", position = "dodge") + 
   scale_fill_brewer(palette = "Set2")
 p6
-dev.off()
+ggsave("./graphs/subset-scores.png", width = 16, height = 16, dpi = 120)
 
 ####################
 #Recreate figure 7
@@ -149,16 +146,14 @@ dev.off()
 strSub1$diff <- strSub1$score - ltrSub1$score
 strSub2$diff <- strSub2$score - ltrSub2$score
 
-png('./graphs/subset-1-diff.png')
 p7a<-ggplot(strSub1, aes(x = reorder(query, -diff), diff)) + 
   geom_bar(stat="identity", position = "dodge") + 
   scale_fill_brewer(palette = "Set2") + ylim(-0.6, 0.4)
 p7a
-dev.off()
+ggsave("./graphs/subset-1-diff.png", width = 16, height = 7, dpi = 120)
 
-png('./graphs/subset-2-diff.png')
 p7b<-ggplot(strSub2, aes(x = reorder(query, -diff), diff)) + 
   geom_bar(stat="identity", position = "dodge") + 
   scale_fill_brewer(palette = "Set2") + ylim(-0.6, 0.4)
 p7b
-dev.off()
+ggsave("./graphs/subset-2-diff.png", width = 16, height = 7, dpi = 120)
