@@ -1,8 +1,10 @@
 import * as path from 'path';
 
+export const tablesPath = path.join(__dirname, '../tables');
+
 export const csvFilePath = path.join(__dirname, '../data/features.csv');
 export const queriesPath = path.join(__dirname, '../data/queries.txt');
-
+export const qrelsPath = path.join(__dirname, '../data/qrels.txt');
 // export const traingDataPath = path.join(__dirname, '../result/training-data.json');
 // export const modelPath = path.join(__dirname, '../result/model');
 // export const splitsPath = path.join(__dirname, '../result/splits');
@@ -13,6 +15,7 @@ export function paths(name: string) {
   return {
     csvFilePath: path.join(__dirname, '../data/features.csv'),
     queriesPath: path.join(__dirname, '../data/queries.txt'),
+    qrelsPath: path.join(__dirname, '../data/qrels.txt'),
 
     traingDataPath: path.join(__dirname, `../result/${name}/training-data.json`),
     configPath: path.join(__dirname, `../result/${name}/nordlys-ml-config.json`),

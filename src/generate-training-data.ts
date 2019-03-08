@@ -15,7 +15,6 @@ export function extractFeatures(row: Types.Row, features: Types.Features): { [ke
   }, {});
 }
 
-// Async / await usage
 export async function generateTrainingSet(featuresEnabled: Types.Features = Features.allFeatures): Promise<{ [key: string]: Types.MLInstance }> {
   const jsonArray: Array<Types.Row> = await csv().fromFile(Config.csvFilePath);
   const data = jsonArray.map(row => {

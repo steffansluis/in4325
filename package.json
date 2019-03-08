@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "yarn run build && node scripts",
     "build": "tsc && mkdir -p result",
+    "process-tables": "node scripts/process-tables.js",
+    "generate-features": "node scripts/generate-features.js",
     "generate-training-data": "node scripts/generate-training-data.js > ./result/training-data.json",
     "generate-ml-config": "node scripts/generate-ml-config.js > ./result/nordlys-ml-config.json",
     "generate-model": "(cd nordlys && python -m nordlys.core.ml.ml ../result/nordlys-ml-config.json)",
