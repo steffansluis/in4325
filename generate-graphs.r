@@ -2,7 +2,7 @@
 library(ggplot2)
 
 # Create a standard features dataframe
-baselineFeatures <- c("row", "col", "nul", "in_link", "out_link", "pgcount", "tImp", "tPF", "leftColhits", "SecColhits", "bodyhits", 
+baselineFeatures <- c("row", "col", "nul", "in_link", "out_link", "pgcount", "tImp", "tPF", "leftColhits", "SecColhits", "bodyhits", "query_l",
                "PMI", "qInPgTitle", "qInTableTitle", "yRank", "csr_score", "idf1", "idf2", "idf3", "idf4", "idf5", "idf6")
 bEntFeatures <- c("max", "sum", "avg", "sim")
 wEmbFeatures <- c("emax", "esum", "eavg", "esim")
@@ -21,9 +21,11 @@ setwd("C:\\Users\\Claudio\\Stack\\TU Delft\\2017-2019 Information Architecture\\
 ######################
 #Recreate figure 4
 ######################
+rawFeatures
+features
 
 # Parse feature importances into a dataframe
-rawFeatures <- read.delim("./result/features.txt", header = FALSE, sep = "\t", dec = ".")
+rawFeatures <- read.delim("./result/all_all/features.txt", header = FALSE, sep = "\t", dec = ".")
 rawFeatures <- rawFeatures[2:(nrow(rawFeatures)-1),]
 rawFeatures <- data.frame("feature"= rawFeatures[1:nrow(rawFeatures),1], "score"= rawFeatures[1:nrow(rawFeatures),2])
 
@@ -40,23 +42,24 @@ for(i in 1:nrow(rawFeatures)) {
   }
 }
 
-features
+png('./graphs/feature-importance.png')
 p4<-ggplot(features, aes(x = reorder(feature, -importance), importance, fill = type)) + 
   geom_bar(stat="identity", position = "dodge") + 
 scale_fill_brewer(palette = "Set2") + theme(axis.text.x = element_text(angle = 90, hjust=1, vjust=0))
-p4
+p4 # The feature importance for 1 run (5f cv) with all the features
+dev.off()
 
 ######################
 #Recreate figure 5
 ######################
 
 #import evals
-bCatEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Categories
-bEntEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Entities
-wEmbEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the word embeddings
-gEmbEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the graph embedding
-strEval <- read.delim("./result/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for combined representation
-ltrEval <- read.delim("./result/eval_ltr.txt", header = FALSE, sep = "\t", dec = ".")
+bCatEval <- read.delim("./result/bagOfCategories_all/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Categories
+bEntEval <- read.delim("./result/bagOfEntities_all/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the Bag of Entities
+wEmbEval <- read.delim("./result/wordEmbeddings_all/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the word embeddings
+gEmbEval <- read.delim("./result/graphEmbeddings_all/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for the graph embedding
+strEval <- read.delim("./result/wordEmbeddings_all/eval.txt", header = FALSE, sep = "\t", dec = ".") # Scores for combined representation
+ltrEval <- read.delim("./result/lexicalFeatures/eval.txt", header = FALSE, sep = "\t", dec = ".")
 
 ###
 # Preprocessing
@@ -90,12 +93,6 @@ strEval$query <- sapply(strEval$query, as.numeric)
 ltrEval$query <- sapply(ltrEval$query, as.numeric)
 
 #for each representation type
-
-strEval
-
-bCatEval
-ltrEval
-
 bCatEval$diff <- bCatEval$score - ltrEval$score
 bEntEval$diff <- bEntEval$score - ltrEval$score
 wEmbEval$diff <- wEmbEval$score - ltrEval$score
@@ -103,17 +100,25 @@ gEmbEval$diff <- gEmbEval$score - ltrEval$score
 
 # create a histogram for each representation
 
+png('./graphs/diff-bag-of-categories.png')
 p5a <- ggplot(bCatEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
-p5a
+p5a # The difference between bag of categories and ltr
+dev.off()
 
+png('./graphs/diff-bag-of-entities.png')
 p5b <- ggplot(bEntEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
-p5b
+p5b  # The difference between bag of entities and ltr
+dev.off()
 
+png('./graphs/diff-word-embeddings.png')
 p5c <- ggplot(wEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
-p5c
+p5c  # The difference between word embeddings and ltr
+dev.off()
 
+png('./graphs/diff-graph-embeddings.png')
 p5d <- ggplot(gEmbEval, aes(x=diff)) + geom_histogram(binwidth=0.1, color="orange", fill="orange")
-p5d
+p5d  # The difference between graph embeddings and ltr
+dev.off()
 
 ######################
 #Recreate figure 6
@@ -130,10 +135,12 @@ df6 <- data.frame("method" = c("LTR", "LTR", "STR", "STR"),
 "scores" = c(mean(ltrSub1$score),mean(ltrSub2$score),mean(strSub1$score),mean(strSub2$score))
 )
 
+png('./graphs/subset-scores.png')
 p6<-ggplot(df6, aes(factor(subset), scores, fill = method)) + 
   geom_bar(stat="identity", position = "dodge") + 
   scale_fill_brewer(palette = "Set2")
 p6
+dev.off()
 
 ####################
 #Recreate figure 7
@@ -142,12 +149,16 @@ p6
 strSub1$diff <- strSub1$score - ltrSub1$score
 strSub2$diff <- strSub2$score - ltrSub2$score
 
+png('./graphs/subset-1-diff.png')
 p7a<-ggplot(strSub1, aes(x = reorder(query, -diff), diff)) + 
   geom_bar(stat="identity", position = "dodge") + 
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set2") + ylim(-0.6, 0.4)
 p7a
+dev.off()
 
+png('./graphs/subset-2-diff.png')
 p7b<-ggplot(strSub2, aes(x = reorder(query, -diff), diff)) + 
   geom_bar(stat="identity", position = "dodge") + 
-  scale_fill_brewer(palette = "Set2")
+  scale_fill_brewer(palette = "Set2") + ylim(-0.6, 0.4)
 p7b
+dev.off()
