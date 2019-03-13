@@ -2,6 +2,7 @@ import * as path from 'path';
 
 export const csvFilePath = path.join(__dirname, '../data/features.csv');
 export const queriesPath = path.join(__dirname, '../data/queries.txt');
+export const significancesFilePath = path.join(__dirname, '../result/significances.csv');
 
 export const resultPaths = [
   '../build-5/result/',
