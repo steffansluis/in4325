@@ -1,5 +1,7 @@
 import * as path from 'path';
 
+export const REDIS_URL = 'redis://localhost:6379';
+
 export const tablesPath = path.join(__dirname, '../tables');
 
 export const csvFilePath = path.join(__dirname, '../data/features.csv');

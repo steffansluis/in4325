@@ -8,6 +8,7 @@ defaults: &defaults
       environment:
         ES_JAVA_OPTS: -Xms512m -Xmx1024m
     - image: mongo:latest
+    - image: redis:latest
 
 version: 2
 jobs:
@@ -15,25 +16,37 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+
       - restore_cache:
           keys:
           - node_modules-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+      - restore_cache:
+          keys:
           - nordlys
 
-      - run:
-          name: Install nordlys
-          command: bash .circleci/install-nordlys.sh
+      - restore_cache:
+          keys:
+          - tables
+
+      # - run:
+      #     name: Install nordlys
+      #     command: bash .circleci/install-nordlys.sh
 
       - run:
-          name: Install trec_eval
-          command: |
-            wget https://github.com/usnistgov/trec_eval/archive/v9.0.6.tar.gz
-            mv v9.0.6.tar.gz trec_eval_v9.0.6.tar.gz
-            tar -C /usr/local/bin -xzvf trec_eval_v9.0.6.tar.gz
-            rm trec_eval_v9.0.6.tar.gz
-            cd /usr/local/bin/trec_eval-9.0.6
-            make
-            make install
+          name: Download tables
+          command: bash .circleci/download-tables.sh
+
+      # - run:
+      #     name: Install trec_eval
+      #     command: |
+      #       wget https://github.com/usnistgov/trec_eval/archive/v9.0.6.tar.gz
+      #       mv v9.0.6.tar.gz trec_eval_v9.0.6.tar.gz
+      #       tar -C /usr/local/bin -xzvf trec_eval_v9.0.6.tar.gz
+      #       rm trec_eval_v9.0.6.tar.gz
+      #       cd /usr/local/bin/trec_eval-9.0.6
+      #       make
+      #       make install
 
       - run:
           name: Install latest yarn
@@ -43,22 +56,22 @@ jobs:
           name: Install dependencies
           command: yarn install
 
-      - run:
-          name: install dockerize
-          command: |
-            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-            tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-          environment:
-            DOCKERIZE_VERSION: v0.3.0
-
-      - run:
-          name: Wait for ElasticSearch
-          command: dockerize -wait http://localhost:9200 -timeout 1m
-
-      - run:
-          name: Wait for Mongo
-          command: dockerize -wait http://localhost:27017 -timeout 1m
+      # - run:
+      #     name: install dockerize
+      #     command: |
+      #       wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+      #       tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+      #       rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+      #     environment:
+      #       DOCKERIZE_VERSION: v0.3.0
+      #
+      # - run:
+      #     name: Wait for ElasticSearch
+      #     command: dockerize -wait http://localhost:9200 -timeout 1m
+      #
+      # - run:
+      #     name: Wait for Mongo
+      #     command: dockerize -wait http://localhost:27017 -timeout 1m
 
       - save_cache:
           paths:
@@ -70,7 +83,17 @@ jobs:
             - nordlys
           key: nordlys
 
-      - run: yarn start
+      - save_cache:
+          paths:
+            - tables
+          key: tables
+
+      - run:
+          name: Process tables
+          command: yarn run process-tables
+          no_output_timeout: 20m
+
+      - run: yarn test
 
       - store_artifacts:
           path: result

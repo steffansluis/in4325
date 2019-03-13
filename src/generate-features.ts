@@ -2,7 +2,7 @@ import * as Types from './types';
 import * as Queries from './queries';
 import * as Tables from './tables';
 
-import * as ProcessTables from './process-tables';
+// import * as ProcessTables from './process-tables';
 
 export function generateTableFeatures(table: Types.Table): Types.TableFeatures {
   const row = table.numDataRows;
@@ -196,16 +196,16 @@ export const HEADER = [
   "rel"
 ];
 
-export function sortRowValues(row: Types.Row, order: string[]): string[] {
+export function sortRowValues(row: Types.Row, order: string[] = HEADER): string[] {
   return order.map(prop => row[prop]);
 }
 
 export async function doThings() {
-  await ProcessTables.doThings();
+  // await ProcessTables.doThings();
 
   console.log(HEADER.join(','));
   return Queries.qrels.reduce(async (memo, qrel) => {
-    if (qrel.document !== "table-0001-249") return memo; // Using only a subset of the data for development, this one in the qrels as well
+    // if (qrel.document !== "table-0001-249") return memo; // Using only a subset of the data for development, this one in the qrels as well
     await memo;
 
     const features = await generateFeatures(qrel);
@@ -216,4 +216,4 @@ export async function doThings() {
   }, Promise.resolve());
 }
 
-doThings();
+// doThings();

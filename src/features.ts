@@ -1,3 +1,6 @@
+import csv from 'csvtojson';
+
+import * as Config from './config';
 import * as Types from './types';
 
 export const queryFeatures: Types.Features = {
@@ -137,3 +140,10 @@ export const configurations: { [key:string]: Types.Features } = Object.keys(sema
 
   'all_all': allFeatures
 });
+
+var _FEATURES: Array<Types.Row>;
+export async function getCSVFeatures(): Promise<Array<Types.Row>> {
+  if (_FEATURES) return _FEATURES;
+  _FEATURES = (await csv().fromFile(Config.csvFilePath));
+  return _FEATURES;
+}

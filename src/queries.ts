@@ -13,7 +13,7 @@ export const queries = rawQueries.split('\n').slice(0, -1).reduce((memo, line) =
 }, {});
 
 const rawQRels = fs.readFileSync(Config.qrelsPath).toString();
-export const qrels = rawQRels.split('\n').map(line => {
+export const qrels = rawQRels.split('\n').slice(0, -1).map(line => {
   const [ topic, iteration, document, relevancy ] = line.split('\t'); // See also: https://trec.nist.gov/data/qrels_eng/
   return {
     topic,
