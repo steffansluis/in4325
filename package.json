@@ -12,7 +12,8 @@
     "generate-model": "(cd nordlys && python -m nordlys.core.ml.ml ../result/nordlys-ml-config.json)",
     "generate-runfile": "node scripts/generate-runfile.js > ./result/runfile.txt",
     "generate-evaluation": "trec_eval -m ndcg -q data/qrels.txt result/runfile.txt > result/eval.txt",
-    "generate-results": "yarn run build && yarn run generate-ml-config && yarn run generate-training-data && yarn run generate-model && yarn run generate-runfile && yarn run generate-evaluation"
+    "generate-results": "yarn run build && yarn run generate-ml-config && yarn run generate-training-data && yarn run generate-model && yarn run generate-runfile && yarn run generate-evaluation",
+    "summarize-results": "mkdir -p result/summarized && node scripts/summarize-results"
   },
   "repository": {
     "type": "git",

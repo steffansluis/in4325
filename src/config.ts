@@ -3,6 +3,21 @@ import * as path from 'path';
 export const csvFilePath = path.join(__dirname, '../data/features.csv');
 export const queriesPath = path.join(__dirname, '../data/queries.txt');
 
+export const resultPaths = [
+  '../build-5/result/',
+  '../build-6/result/',
+  '../build-7/result/',
+  '../build-8/result/',
+  '../build-9/result/',
+].map(p => path.join(__dirname, p));
+
+export const summarizedResultsPath = path.join(__dirname, '../result/summarized');
+
+// export const resultPaths = [
+//   'result/',
+//   'result/',
+// ].map(p => path.join(__dirname, p));
+
 // export const traingDataPath = path.join(__dirname, '../result/training-data.json');
 // export const modelPath = path.join(__dirname, '../result/model');
 // export const splitsPath = path.join(__dirname, '../result/splits');
