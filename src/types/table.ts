@@ -1,5 +1,7 @@
 import { Query } from '.';
 
+import * as Utils from '../utils';
+
 export type Table = {
   title: string[]
   numCols: number,
@@ -11,6 +13,15 @@ export type Table = {
   caption: string,
   data: string[][]
 };
+
+export type TableTermCounts = {
+  pageTitle: Utils.TermCounts
+  sectionTitle: Utils.TermCounts
+  tableCaption: Utils.TermCounts
+  tableHeading: Utils.TermCounts
+  tableBody: Utils.TermCounts
+  catchAll  : Utils.TermCounts
+}
 
 export module Table {
   export function bodyText(table: Table): string {
@@ -51,6 +62,24 @@ export module Table {
   export function bodyHits(table: Table, query: Query): number {
     const text = bodyText(table);
     return Query.hits(query, text);
+  }
+
+  export function termCounts(table: Table): TableTermCounts {
+    const pageTitle = table.pgTitle;
+    const sectionTitle = table.secondTitle;
+    const tableCaption = table.caption;
+    const tableHeading = table.title.join(' ');
+    const tableBody = bodyText(table);
+    const catchAll = [ pageTitle, sectionTitle, tableCaption, tableBody ].join('\n');
+
+    return {
+      pageTitle: Utils.countTerms(pageTitle),
+      sectionTitle: Utils.countTerms(sectionTitle),
+      tableCaption: Utils.countTerms(tableCaption),
+      tableHeading: Utils.countTerms(tableHeading),
+      tableBody: Utils.countTerms(tableBody),
+      catchAll: Utils.countTerms(catchAll),
+    };
   }
 }
 

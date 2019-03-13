@@ -74,10 +74,10 @@ async function doTests() {
     };
   }, {});
 
-  // const key = "table-0001-249";
-  // const [ qrel ] = Queries.qrels.filter(x => x.document === "table-0001-249");
-  // const qrels = [ qrel ];
-  const qrels = Queries.qrels;
+  const key = "table-0001-249";
+  const [ qrel ] = Queries.qrels.filter(x => x.document === "table-0001-249");
+  const qrels = [ qrel ];
+  // const qrels = Queries.qrels;
 
   // console.log('Reducing qrels');
   qrels.reduce(async (memo, qrel, index) => {

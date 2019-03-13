@@ -4,7 +4,7 @@ import * as Config from './config';
 import * as Types from './types';
 
 const rawQueries = fs.readFileSync(Config.queriesPath).toString();
-export const queries = rawQueries.split('\n').slice(0, -1).reduce((memo, line) => {
+export const queries: { [key: string]: string } = rawQueries.split('\n').slice(0, -1).reduce((memo, line) => {
   const [ _, query_id, query ] = line.split(/^([0-9]*) /)
   return {
     ...memo,
@@ -22,6 +22,15 @@ export const qrels = rawQRels.split('\n').slice(0, -1).map(line => {
     relevancy
   } as Types.QRel;
 });
+
+export const terms: { [key: string]: boolean } = Object.values(queries).reduce((memo, query) => {
+  const terms = query.split(' ');
+  const termsObj = terms.reduce((memo, term) => ({ ...memo, [term]: true }), {});
+  return {
+    ...memo,
+    ...termsObj
+  };
+}, {});
 
 // export const relevantQueryIdByTableId = qrels.reduce((memo, qrel) => {
 //   const { topic, document } = qrel;

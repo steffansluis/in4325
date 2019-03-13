@@ -7,8 +7,14 @@ import * as Tables from './tables';
 export function generateTableFeatures(table: Types.Table): Types.TableFeatures {
   const row = table.numDataRows;
   const col = table.numCols;
-  const nul = null;
+  const nul = table.data.reduce((memo, row) => {
+    const nulCount = row.reduce((memo, cell) => memo + Number(cell === ""), 0);
+    return memo + nulCount;
+  }, 0);
 
+  console.log(Types.Table.termCounts(table));
+
+  // Contextual features
   const in_link = null;
   const out_link = null;
   const pgcount = null;
@@ -70,7 +76,10 @@ export function generateQueryTableFeatures(query: Types.Query, table: Types.Tabl
   const qInPgTitle = Types.Query.hits(query, pageTitle) / query_l;
   const qInTableTitle = Types.Query.hits(query, tableTitle) / query_l;
 
+  // Contextual feature
   const yRank = null;
+
+  // TODO: Implement this
   const csr_score = null;
 
   return {
@@ -205,7 +214,7 @@ export async function doThings() {
 
   console.log(HEADER.join(','));
   return Queries.qrels.reduce(async (memo, qrel) => {
-    // if (qrel.document !== "table-0001-249") return memo; // Using only a subset of the data for development, this one in the qrels as well
+    if (qrel.document !== "table-0001-249") return memo; // Using only a subset of the data for development, this one in the qrels as well
     await memo;
 
     const features = await generateFeatures(qrel);
@@ -216,4 +225,4 @@ export async function doThings() {
   }, Promise.resolve());
 }
 
-// doThings();
+doThings().then(() => process.exit(0));
