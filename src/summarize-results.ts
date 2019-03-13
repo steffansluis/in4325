@@ -48,7 +48,7 @@ export function summarizeLines(lines: string[]): string {
   return `${metric}                  	${query_id} ${avg}`;
 }
 
-export function summarizeResults() {
+export function summarizeResults(): { [key: string]: string[] } {
   // console.log('Result paths:', dataPaths);
   return dataPaths.reduce((memo, dataPath) => {
     const resultPaths = Config.resultPaths.map(resultPath => path.join(resultPath, dataPath, 'eval.txt'));
@@ -74,20 +74,20 @@ export function summarizeResults() {
 
     return {
       ...memo,
-      [dataPath]: summarized.join('\n')
+      [dataPath]: summarized
     };
   }, {});
 }
 
 export async function doThings() {
-  const summarized: { [key: string]: string } = summarizeResults();
+  const summarized = summarizeResults();
   await Object.entries(summarized).reduce(async (memo, [ dataPath, summary]) => {
     await memo;
 
     const outputPath = path.join(Config.summarizedResultsPath, `${dataPath}_eval.txt`);
 
-    return fs.writeFileSync(outputPath, Buffer.from(summary));
-    
+    return fs.writeFileSync(outputPath, Buffer.from(summary.join('\n')));
+
   }, Promise.resolve())
   // console.log(summarized['all_all']);
 }
